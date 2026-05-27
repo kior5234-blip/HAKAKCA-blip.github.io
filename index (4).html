@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Hakan Akakca — Portfolio</title>
+  <!-- SEO & IA crawlers -->
+  <meta name="description" content="Hakan Akakca — Étudiant BUT Réseaux & Télécommunications à l'IUT de Colmar. 18 ans. Compétences : VLAN, DHCP, TCP/IP, Wireshark, Linux Debian, Python, HTML/CSS, Arduino, GNS3. Projets : outil Python/PyQt5 détection gros fichiers (SAÉ 1.05), réseau GNS3/RIPv2, serre Arduino automatisée, site web ESP32, analyse WiFi heatmap. Langues : Français bilingue, Turc bilingue, Anglais scolaire. Recherche alternance cybersécurité 2ème année BUT RT. GitHub : github.com/Hakan-aoe4/Projet.">
+  <meta name="keywords" content="Hakan Akakca, BUT RT, réseaux télécommunications, Colmar, alternance, cybersécurité, Python, PyQt5, GNS3, VLAN, Linux, Arduino, ESP32, Wireshark, PowerShell">
+  <meta name="author" content="Hakan Akakca">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f3ef; --surface: #ffffff; --border: #e0ddd8;
+      --text: #1a1916; --muted: #7a7672; --tag-bg: #eeecea; --nav-h: 64px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
+      background: rgba(245,243,239,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; z-index: 100;
+    }
+    .nav-logo { font-family: 'DM Serif Display', serif; font-size: 1.25rem; color: var(--text); text-decoration: none; }
+    .nav-links { display: flex; gap: 6px; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; padding: 6px 14px; border-radius: 20px; transition: all 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); background: var(--surface); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+
+    .mode-switch { display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 4px; }
+    .mode-btn { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; padding: 5px 14px; border-radius: 20px; border: none; cursor: pointer; transition: all 0.2s; background: transparent; color: var(--muted); }
+    .mode-btn.active { background: var(--text); color: #fff; }
+
+    .friend-badge { display: none; align-items: center; gap: 6px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; font-weight: 600; color: #16a34a; }
+    .friend-badge.visible { display: flex; }
+    .friend-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #16a34a; }
+
+    .lock-btn { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 600; padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--tag-bg); color: var(--muted); cursor: pointer; transition: all 0.2s; }
+    .lock-btn:hover { background: var(--surface); color: var(--text); }
+
+    /* MODAL */
+    .pw-overlay { display: none; position: fixed; inset: 0; background: rgba(26,25,22,0.5); backdrop-filter: blur(6px); z-index: 999; align-items: center; justify-content: center; }
+    .pw-overlay.open { display: flex; }
+    .pw-box { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 36px 40px; width: 100%; max-width: 360px; box-shadow: 0 20px 60px rgba(0,0,0,0.12); animation: fadeUp 0.25s ease; }
+    .pw-title { font-family: 'DM Serif Display', serif; font-size: 1.5rem; margin-bottom: 6px; }
+    .pw-sub { font-size: 0.875rem; color: var(--muted); margin-bottom: 24px; }
+    .pw-input { width: 100%; padding: 11px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: 0.925rem; color: var(--text); outline: none; transition: border 0.2s; margin-bottom: 10px; }
+    .pw-input:focus { border-color: var(--text); }
+    .pw-error { font-size: 0.8rem; color: #dc2626; margin-bottom: 12px; min-height: 18px; }
+    .pw-actions { display: flex; gap: 10px; }
+    .pw-submit { flex: 1; padding: 11px; border-radius: 12px; border: none; background: var(--text); color: #fff; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+    .pw-submit:hover { opacity: 0.85; }
+    .pw-cancel { padding: 11px 16px; border-radius: 12px; border: 1px solid var(--border); background: transparent; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--muted); cursor: pointer; }
+    .pw-cancel:hover { background: var(--tag-bg); }
+
+    .page-wrapper { padding-top: calc(var(--nav-h) + 48px); padding-bottom: 80px; max-width: 960px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
+
+    .hero { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center; padding-bottom: 56px; border-bottom: 1px solid var(--border); margin-bottom: 56px; }
+    .hero-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 16px; }
+    .hero-tag::before { content: ''; width: 6px; height: 6px; background: #4ade80; border-radius: 50%; box-shadow: 0 0 0 3px rgba(74,222,128,0.25); }
+    h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 20px; }
+    h1 em { font-style: italic; color: var(--muted); }
+    .hero-desc { color: var(--muted); font-size: 1rem; max-width: 480px; line-height: 1.7; margin-bottom: 28px; }
+    .hero-photo { width: 140px; height: 140px; border-radius: 50%; background: var(--tag-bg); border: 3px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+    .hero-photo span { font-family: 'DM Serif Display', serif; font-size: 2.5rem; color: var(--muted); }
+
+    .contact-row { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+    .contact-item { display: flex; align-items: center; gap: 7px; font-size: 0.875rem; color: var(--muted); }
+    .contact-item a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .contact-item a:hover { color: var(--text); }
+
+    /* Slot vide pour les infos privées — injecté par JS */
+    .private-slot { display: flex; align-items: center; gap: 7px; font-size: 0.875rem; color: var(--muted); }
+    .private-placeholder { display: flex; align-items: center; gap: 7px; font-size: 0.875rem; color: var(--muted); opacity: 0.4; font-style: italic; }
+
+    .section { margin-bottom: 52px; }
+    .section-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 24px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px; transition: box-shadow 0.2s, transform 0.2s; }
+    .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); transform: translateY(-2px); }
+    .card-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 12px; }
+    .card p { color: var(--text); font-size: 0.925rem; line-height: 1.65; }
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+    .tag { background: var(--tag-bg); color: var(--muted); font-size: 0.78rem; font-weight: 500; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); }
+    .mode-content { display: none; }
+    .mode-content.visible { display: block; }
+    .skill-row { display: flex; flex-direction: column; gap: 14px; }
+    .skill-item { display: flex; flex-direction: column; gap: 6px; }
+    .skill-meta { font-size: 0.875rem; }
+    .bar { height: 5px; background: var(--tag-bg); border-radius: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; background: var(--text); border-radius: 10px; }
+    .page-nav { display: flex; justify-content: flex-end; margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .page-nav a { display: inline-flex; align-items: center; gap: 8px; font-size: 0.875rem; font-weight: 600; color: var(--text); text-decoration: none; padding: 10px 20px; border: 1px solid var(--border); border-radius: 24px; background: var(--surface); transition: all 0.2s; }
+    .page-nav a:hover { background: var(--text); color: #fff; border-color: var(--text); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .hero, .section { animation: fadeUp 0.5s ease both; }
+    .section:nth-child(2) { animation-delay: 0.1s; }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 16px; gap: 6px; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-photo { order: -1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- RÉSUMÉ STRUCTURÉ — pour les IA et moteurs de recherche -->
+<div style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;" aria-hidden="true">
+  Hakan Akakca. Étudiant en BUT Réseaux et Télécommunications, 1ère année, IUT de Colmar (Université de Haute-Alsace). 18 ans, né le 19/12/2007. Basé à Colmar (68000). Recherche une alternance en cybersécurité pour la 2ème année de BUT RT. Également disponible pour un emploi en parallèle des études (soirées et week-ends).
+  Compétences techniques : VLAN, routage inter-VLAN, DHCP, TCP/IP, modèle OSI, configuration switch et routeur, Wireshark, Linux Debian, VirtualBox, virtualisation, HTML, CSS, Python, Arduino C, GNS3, mesure WiFi heatmap, fibre optique, câblage réseau.
+  Logiciels : DaVinci Resolve, Autodesk Inventor, PowerPoint, Canva, GNS3, VirtualBox, Wireshark.
+  Langues : Français bilingue, Turc bilingue, Anglais niveau scolaire.
+  Projets : SAÉ 1.05 outil de reporting Python PyQt5 PowerShell pour détection de gros fichiers. Réseau d'entreprise GNS3 avec STP RIPv2 VLAN. Serre autonome automatisée Arduino Inventor. Site web hébergé sur ESP32. Analyse WiFi heatmap.
+  Formation : BUT RT 2025-2026 IUT Colmar. BAC STI2D 2025 Lycée Georges Beaumont Saint-Dié-des-Vosges. Brevet 2022.
+  GitHub : https://github.com/Hakan-aoe4/Projet
+</div>
+
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-box">
+    <div class="pw-title">Mode ami 🔓</div>
+    <div class="pw-sub">Entre le mot de passe pour voir les infos complètes.</div>
+    <input type="password" class="pw-input" id="pwInput" placeholder="Mot de passe"
+           onkeydown="if(event.key==='Enter') checkPassword()">
+    <div class="pw-error" id="pwError"></div>
+    <div class="pw-actions">
+      <button class="pw-cancel" onclick="closeModal()">Annuler</button>
+      <button class="pw-submit" onclick="checkPassword()">Accéder</button>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-logo">Hakan Akakca</a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Profil</a></li>
+    <li><a href="competences.html">Compétences</a></li>
+    <li><a href="projets.html">Projets</a></li>
+    <li><a href="formation.html">Formation</a></li>
+  </ul>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <div class="friend-badge" id="friendBadge">
+      <div class="friend-badge-dot"></div>
+      Mode ami
+      <span onclick="lockMode()" style="cursor:pointer;margin-left:4px;opacity:0.6;" title="Verrouiller">✕</span>
+    </div>
+    <button class="lock-btn" id="lockBtn" onclick="openModal()">🔒 Mode ami</button>
+    <div class="mode-switch">
+      <button class="mode-btn active" id="btn-pro" onclick="switchCV('pro')">Emploi</button>
+      <button class="mode-btn" id="btn-tech" onclick="switchCV('tech')">Alternance</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="hero">
+    <div>
+      <div class="hero-tag">Étudiant · Colmar, 68000</div>
+      <h1>Hakan<br><em>Akakca</em></h1>
+
+      <div class="mode-content visible" id="desc-pro">
+        <p class="hero-desc">Étudiant en BUT Réseaux & Télécommunications. Polyvalent, rigoureux et rapide à l'apprentissage — je recherche un emploi en parallèle de mes études.</p>
+      </div>
+      <div class="mode-content" id="desc-tech">
+        <p class="hero-desc">Étudiant en BUT Réseaux & Télécommunications à Colmar, je recherche une alternance pour développer mes compétences en administration réseau, cybersécurité et infrastructures informatiques.</p>
+      </div>
+
+      <div class="contact-row" id="contactRow">
+        <!-- Slots privés — remplis par JS uniquement en mode ami -->
+        <span id="phoneSlot"></span>
+        <span id="mailSlot"></span>
+        <!-- GitHub toujours visible -->
+        <span class="contact-item">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+          <a href="https://github.com/Hakan-aoe4/Projet/tree/main" target="_blank">GitHub</a>
+        </span>
+      </div>
+    </div>
+    <div class="hero-photo"><span>HA</span></div>
+  </div>
+
+  <div class="mode-content visible" id="section-pro">
+    <div class="section">
+      <div class="section-label">À propos</div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-title">Profil</div>
+          <p>18 ans, basé à Colmar (68000). Étudiant en 1ère année de BUT RT, je recherche un emploi en soirée/week-end. Bilingue français–turc.</p>
+          <div class="tags"><span class="tag">Français bilingue</span><span class="tag">Turc bilingue</span><span class="tag">Anglais scolaire</span></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Expérience</div>
+          <p>Aide en cuisine dans un kebab — service, nettoyage, organisation. Travaux pratiques avec outils lors de chantiers en famille.</p>
+          <div class="tags"><span class="tag">Travail en équipe</span><span class="tag">Polyvalence</span><span class="tag">Rigueur</span></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Centres d'intérêt</div>
+          <p>Musculation · Vélo · Piano · Cuisine · Informatique</p>
+          <div class="tags"><span class="tag">Sport</span><span class="tag">Créativité</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mode-content" id="section-tech">
+    <div class="section">
+      <div class="section-label">Objectif alternance</div>
+      <div class="card" style="max-width:100%">
+        <div class="card-title">Recherche d'alternance — BUT RT 2ème année</div>
+        <p>Étudiant en BUT Réseaux & Télécommunications à l'IUT de Colmar. Je vise une spécialisation en cybersécurité en 2ème année et recherche une alternance pour développer mes compétences en administration réseau, cybersécurité et infrastructures informatiques.</p>
+        <div class="tags"><span class="tag">Administration réseau</span><span class="tag">Cybersécurité</span><span class="tag">Infrastructure IT</span><span class="tag">Alternance</span></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">Compétences clés</div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-title">Réseaux</div>
+          <div class="skill-row">
+            <div class="skill-item"><div class="skill-meta"><span>VLAN / Routage inter-VLAN</span></div><div class="bar"><div class="bar-fill" style="width:70%"></div></div></div>
+            <div class="skill-item"><div class="skill-meta"><span>DHCP / TCP/IP / OSI</span></div><div class="bar"><div class="bar-fill" style="width:65%"></div></div></div>
+            <div class="skill-item"><div class="skill-meta"><span>Wireshark</span></div><div class="bar"><div class="bar-fill" style="width:55%"></div></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Systèmes</div>
+          <div class="skill-row">
+            <div class="skill-item"><div class="skill-meta"><span>Linux Debian</span></div><div class="bar"><div class="bar-fill" style="width:55%"></div></div></div>
+            <div class="skill-item"><div class="skill-meta"><span>VirtualBox</span></div><div class="bar"><div class="bar-fill" style="width:60%"></div></div></div>
+            <div class="skill-item"><div class="skill-meta"><span>HTML / CSS</span></div><div class="bar"><div class="bar-fill" style="width:65%"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-nav"><a href="competences.html">Compétences &amp; Logiciels →</a></div>
+</div>
+
+<script>
+  // ── Infos privées — JAMAIS dans le HTML, uniquement injectées après auth ──
+  function _d(s) {
+    return atob(s);
+  }
+  // Encodées en base64 — pas lisibles directement dans la source
+  const _p = ['MDYgNTEgODIgMzkgOTY=', 'aGFrYW5zaWJlbDIxOEBnbWFpbC5jb20='];
+
+  function injectPrivateInfo() {
+    const phoneIcon = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>`;
+    const mailIcon = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`;
+
+    document.getElementById('phoneSlot').className = 'contact-item';
+    document.getElementById('phoneSlot').innerHTML = phoneIcon + _d(_p[0]);
+
+    document.getElementById('mailSlot').className = 'contact-item';
+    document.getElementById('mailSlot').innerHTML = mailIcon + `<a href="mailto:${_d(_p[1])}">${_d(_p[1])}</a>`;
+  }
+
+  function clearPrivateInfo() {
+    document.getElementById('phoneSlot').className = '';
+    document.getElementById('phoneSlot').innerHTML = '';
+    document.getElementById('mailSlot').className = '';
+    document.getElementById('mailSlot').innerHTML = '';
+  }
+
+  // ── AUTH ─────────────────────────────────────────────
+  // Hash SHA-256 du mot de passe toto2026
+  const PASS_HASH = 'd654d711fa1d24e32543c3415d81c3ca4968fe1669857bee2faf3efeef796aca';
+
+  async function hashStr(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  async function checkPassword() {
+    const val = document.getElementById('pwInput').value;
+    const h = await hashStr(val);
+    if (h === PASS_HASH) {
+      closeModal();
+      enableFriendMode();
+      sessionStorage.setItem('friendMode', '1');
+    } else {
+      document.getElementById('pwError').textContent = 'Mot de passe incorrect.';
+      document.getElementById('pwInput').focus();
+    }
+  }
+
+  function enableFriendMode() {
+    document.getElementById('friendBadge').classList.add('visible');
+    document.getElementById('lockBtn').style.display = 'none';
+    injectPrivateInfo();
+  }
+
+  function lockMode() {
+    sessionStorage.removeItem('friendMode');
+    document.getElementById('friendBadge').classList.remove('visible');
+    document.getElementById('lockBtn').style.display = '';
+    clearPrivateInfo();
+  }
+
+  function openModal() {
+    document.getElementById('pwOverlay').classList.add('open');
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwError').textContent = '';
+    setTimeout(() => document.getElementById('pwInput').focus(), 100);
+  }
+
+  function closeModal() {
+    document.getElementById('pwOverlay').classList.remove('open');
+  }
+
+  document.getElementById('pwOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // ── CV MODE ──────────────────────────────────────────
+  function switchCV(mode) {
+    const isPro = mode === 'pro';
+    document.getElementById('btn-pro').classList.toggle('active', isPro);
+    document.getElementById('btn-tech').classList.toggle('active', !isPro);
+    document.getElementById('desc-pro').classList.toggle('visible', isPro);
+    document.getElementById('desc-tech').classList.toggle('visible', !isPro);
+    document.getElementById('section-pro').classList.toggle('visible', isPro);
+    document.getElementById('section-tech').classList.toggle('visible', !isPro);
+    localStorage.setItem('cvMode', mode);
+  }
+
+  // Restore on load
+  if (sessionStorage.getItem('friendMode')) enableFriendMode();
+  const savedCV = localStorage.getItem('cvMode');
+  if (savedCV && savedCV !== 'pro') switchCV(savedCV);
+</script>
+</body>
+</html>
